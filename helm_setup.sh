@@ -30,6 +30,10 @@ elif [ "$1" == "upgrade" ]
 then
     echo "Starting upgrade =============================="
 
+    # ## manager and portal session conf
+    # kubectl create secret generic kong-session-conf --from-file=./conf/admin_gui_session_conf --from-file=./conf/portal_session_conf -n cp
+    # ## manager and portal auth conf
+    # kubectl create secret generic kong-auth-conf --from-file=./conf/admin_gui_auth_conf --from-file=./conf/portal_auth_conf -n cp
     #echo "Upgrade Postgres helm charts -------------------------"
     #helm upgrade kongpg bitnami/postgresql -f ./charts/pg_values.yaml -n pg
     
@@ -54,16 +58,16 @@ then
     echo "Creating secrets Control Plane -------------------------"
     ############# create the k8s secrets for CP
     ## Kong enterprise license
-    #kubectl create secret generic kong-enterprise-license --from-file=license=./license/kong-license.json -n cp
+    kubectl create secret generic kong-enterprise-license --from-file=license=./license/kong-license.json -n cp
     ## create postgres password
-    kubectl create secret generic kong-enterprise-postgres-password --from-literal=password=kong -n cp
+    kubectl create secret generic kong-enterprise-postgres-password --from-literal=password=K5B1HXkFT3WzlOgOEMV3 -n cp
     ##gui and api certificates 
-    kubectl create secret tls kong-ssl-cert --cert=./certs/ssl-certs/control-plane-components.crt --key=./certs/ssl-certs/control-plane-components.key -n cp
+    kubectl create secret tls kong-ssl-cert --cert=./certs/ssl-certs/MBUATCERT-cer.cer --key=./certs/ssl-certs/MBUATCERT-Key.key -n cp
     ##shared mode cluster certs
-    #kubectl create secret tls kong-cluster-cert --cert=./certs/hybrid/cluster.crt --key=./certs/hybrid/cluster.key -n cp
+    kubectl create secret tls kong-cluster-cert --cert=./certs/hybrid/cluster.crt --key=./certs/hybrid/cluster.key -n cp
     ##pki mode cluster certs for CA and CP
-    kubectl create secret generic kong-ca-cert --from-file=./certs/ca_cert/ca-cert.pem -n cp
-    kubectl create secret tls kong-control-plane-cert --cert=./certs/cp_cert/control-plane.crt --key=./certs/cp_cert/control-plane.key -n cp
+    # kubectl create secret generic kong-ca-cert --from-file=./certs/ca_cert/ca-cert.pem -n cp
+    # kubectl create secret tls kong-control-plane-cert --cert=./certs/cp_cert/control-plane.crt --key=./certs/cp_cert/control-plane.key -n cp
     ## manager and portal session conf
     kubectl create secret generic kong-session-conf --from-file=./conf/admin_gui_session_conf --from-file=./conf/portal_session_conf -n cp
     ## manager and portal auth conf
@@ -74,18 +78,18 @@ then
     echo "Creating secrets Data Plane -------------------------"
     ############# create the k8s secrets for DP
     ## Kong enterprise license
-    #kubectl create secret generic kong-enterprise-license --from-file=license=./license/kong-license.json -n dp
+    kubectl create secret generic kong-enterprise-license --from-file=license=./license/kong-license.json -n dp
     ## shared mode cluster certs
-    # kubectl create secret tls kong-cluster-cert --cert=./certs/hybrid/cluster.crt --key=./certs/hybrid/cluster.key -n dp
+    kubectl create secret tls kong-cluster-cert --cert=./certs/hybrid/cluster.crt --key=./certs/hybrid/cluster.key -n dp
     ## pki mode CA and data plabe certs
-    kubectl create secret generic kong-ca-cert --from-file=./certs/ca_cert/ca-cert.pem -n dp
-    kubectl create secret tls kong-data-plane-cert --cert=./certs/dp_cert/data-plane.crt --key=./certs/dp_cert/data-plane.key -n dp
+    # kubectl create secret generic kong-ca-cert --from-file=./certs/ca_cert/ca-cert.pem -n dp
+    # kubectl create secret tls kong-data-plane-cert --cert=./certs/dp_cert/data-plane.crt --key=./certs/dp_cert/data-plane.key -n dp
     # gui and api
     #kubectl create secret tls kong-ssl-cert --cert=./certs/ssl/server.crt --key=./certs/ssl/server.key -n dp
-    kubectl create secret tls kong-ssl-cert --cert=./certs/ssl-certs/control-plane-components.crt --key=./certs/ssl-certs/control-plane-components.key -n dp
+    kubectl create secret tls kong-ssl-cert --cert=./certs/dp_cert/star_mbank_ae.pem --key=./certs/dp_cert/star_mbank_ae.key -n dp
 
-    echo "Install Postgres helm charts -------------------------"
-    helm install kongpg bitnami/postgresql -f ./charts/pg_values.yaml -n pg
+    # echo "Install Postgres helm charts -------------------------"
+    # helm install kongpg bitnami/postgresql -f ./charts/pg_values.yaml -n pg
 
     echo "Install Control Plane helm charts -------------------------"
     helm install kongcp kong/kong --values=./charts/cp_values.yaml -n cp

@@ -1,0 +1,16 @@
+{
+    "license": {
+        "version": 1,
+        "signature": "2295c1d8bfdf5dc30bb0669499a6935c07f9af4a4212407524e185f606f35700ef93a8a702b4d24c3408578fa18b870148b3e5094503d34f67ac6d55aa8bcdbb",
+        "payload": {
+            "customer": "Al Maryah Community Bank",
+            "license_creation_date": "2023-07-31",
+            "product_subscription": "Kong Enterprise Edition",
+            "support_plan": "Platinum",
+            "admin_seats": "Unlimited",
+            "dataplanes": "0",
+            "license_expiration_date": "2028-07-30",
+            "license_key": "0011K00002dDwUOQA0_a1V1K000009oJYeUAM"
+        }
+    }
+}

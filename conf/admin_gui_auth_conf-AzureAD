@@ -1,0 +1,16 @@
+ {
+   "issuer": "https://login.microsoftonline.com/bf325037-eb21-4a79-8b3f-466dc460bd7c/v2.0/.well-known/openid-configuration",
+   "client_id": ["de199c3c-57e3-46f2-823f-8dfd74c1d1be"],
+   "client_secret": ["1go8Q~zrOO75LX7W_DGDsxdT7sKz7ZXOzI-8RcUR"],
+   "ssl_verify": false,
+   "leeway": 60,
+   "redirect_uri": ["https://kongmanager.mbankuae-uat.local:8445/overview"],
+   "login_redirect_uri": ["https://kongmanager.mbankuae-uat.local:8445"],
+   "logout_methods": ["GET", "DELETE"],
+   "logout_query_arg": "logout",
+   "logout_redirect_uri": ["https://kongmanager.mbankuae-uat.local:8445"],
+   "scopes": ["api://de199c3c-57e3-46f2-823f-8dfd74c1d1be/kong-admin"],
+   "authenticated_groups_claim": ["groups"],
+   "auth_methods": ["authorization_code"],
+   "admin_claim":"email"
+ }

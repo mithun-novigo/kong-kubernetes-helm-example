@@ -15,10 +15,10 @@ env:
   # Communication to push vitals to control plane
   cluster_telemetry_endpoint: kongcp-kong-clustertelemetry.cp.svc.cluster.local:8006
   # Certificates for cluster communication
-  #lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
-  lua_ssl_trusted_certificate: /etc/secrets/kong-ssl-cert/tls.crt
+  lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt,/etc/secrets/kong-ssl-cert/tls.crt
+  # lua_ssl_trusted_certificate: /etc/secrets/kong-ssl-cert/tls.crt
   lua_ssl_verify_depth: 2
-  log_level: error
+  log_level: debug
 
   # SSL certs settings for HTTPS proxy
   ssl_cert_key: /etc/secrets/kong-ssl-cert/tls.key
@@ -26,32 +26,32 @@ env:
 
   # Cluster certs settings for CP-DP
   # shared mode
-  #cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
-  #cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
+  cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
   # pki mode
-  cluster_mtls: "pki"
-  cluster_cert: /etc/secrets/kong-data-plane-cert/tls.crt
-  cluster_ca_cert: 
-    valueFrom:
-      secretKeyRef:
-        name: kong-ca-cert
-        key: ca-cert.pem
-  cluster_cert_key: /etc/secrets/kong-data-plane-cert/tls.key
-  cluster_server_name: controlplane.example.com
+  # cluster_mtls: "pki"
+  # cluster_cert: /etc/secrets/kong-data-plane-cert/tls.crt
+  # cluster_ca_cert: 
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: kong-ca-cert
+  #       key: ca-cert.pem
+  # cluster_cert_key: /etc/secrets/kong-data-plane-cert/tls.key
+  # cluster_server_name: controlplane.example.com
 
 secretVolumes:
-  # - kong-cluster-cert
+  - kong-cluster-cert
   - kong-ssl-cert
-  - kong-ca-cert
-  - kong-data-plane-cert
+  
 
 ## Data plane proxy
 proxy:
   enabled: true
   type: LoadBalancer
+  loadBalancerIP: 10.131.224.139
   annotations:
-    kubernetes.io/ingress.class: alb
-    konghq.com/protocol: "http"
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    konghq.com/protocol: "https"
   http:
     enabled: false
     servicePort: 8000
@@ -82,7 +82,7 @@ ingressController:
 
 enterprise:
   enabled: true
-  #license_secret: kong-enterprise-license
+  license_secret: kong-enterprise-license
   vitals:
     enabled: true
 
