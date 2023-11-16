@@ -19,8 +19,8 @@ env:
   
   admin_api_uri: "https://kongadmin.mbankuae-uat.local:8444"
   admin_gui_url: "https://kongmanager.mbankuae-uat.local:8445"
-  portal_api_url: "https://KongPortalAPI.mbankuae-uat.local:8447"
-  portal_gui_host: KongPortal.mbankuae-uat.local:8446
+  portal_api_url: "https://kongportalapi.mbankuae-uat.local:8447"
+  portal_gui_host: kongportal.mbankuae-uat.local:8446
   portal_gui_protocol: https
   
   lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
@@ -58,21 +58,6 @@ env:
   # shared mode
   cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
-  # pki mode
-  # cluster_mtls: "pki"
-  # cluster_cert: /etc/secrets/kong-control-plane-cert/tls.crt
-  # cluster_cert_key: /etc/secrets/kong-control-plane-cert/tls.key
-  # cluster_ca_cert: /etc/secrets/kong-ca-cert/tls.crt
-  # pki_check_cn mode - only allows specific CN from data plane
-  # cluster_mtls: "pki_check_cn"
-  # cluster_cert: /etc/secrets/kong-control-plane-cert/tls.crt
-  # cluster_cert_key: /etc/secrets/kong-control-plane-cert/tls.key
-  # cluster_ca_cert: 
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: kong-ca-cert
-  #       key: ca-cert.pem
-  # cluster_allowed_common_names: dp1.example.com,dp2.example.com
 
   anonymous_reports: "off"
   untrusted_lua: "off"
@@ -82,10 +67,8 @@ env:
         name: kong-enterprise-superuser-password
         key: password
   
-  portal_auth: basic-auth
-  #portal_auth: key-auth
-  #portal_auth: openid-connect
-  
+  portal_auth: openid-connect
+  portal_app_auth: external-oauth2
   portal_auth_conf:
     valueFrom:
       secretKeyRef:
@@ -106,7 +89,7 @@ env:
 ## Kong version
 image:
   repository: kong/kong-gateway
-  tag: 3.1.1.2-alpine
+  tag: 3.4.0.0 #3.1.1.2-alpine
   pullPolicy: IfNotPresent
 # Specify Kong admin API service and listener configuration
 admin:
@@ -245,8 +228,7 @@ enterprise:
     enabled: true
   rbac:
     enabled: true
-    # admin_gui_auth: openid-connect
-    admin_gui_auth: basic-auth
+    admin_gui_auth: 'openid-connect'
     session_conf_secret: kong-session-conf
     admin_gui_auth_conf_secret: kong-auth-conf
 

@@ -1,8 +1,7 @@
 {
-    "cookie_name": "portal_session",
-    "cookie_samesite": "off",
-    "secret": "portal-session-secret",
+    "cookie_name": "kong_portal_session",
     "cookie_secure": true,
-    "storage": "kong",
-    "cookie_domain": ".example.com"
+    "cookie_domain":".mbankuae-uat.local",
+    "secret": "portal-session-secret",
+    "storage": "kong"
 }

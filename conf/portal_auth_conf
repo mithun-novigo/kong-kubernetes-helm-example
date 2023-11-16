@@ -1,3 +1,21 @@
 {
-    "hide_credentials": true
+ "consumer_by": ["username","custom_id","id"],
+ "leeway": 1000,
+ "scopes": ["openid","profile","email","offline_access","api://de199c3c-57e3-46f2-823f-8dfd74c1d1be/kong-admin"],
+ "logout_query_arg": "logout",
+ "client_id": ["de199c3c-57e3-46f2-823f-8dfd74c1d1be"],
+ "login_redirect_uri": ["https://kongportal.mbankuae-uat.local:8446/default"],
+ "login_action": "redirect",
+ "logout_redirect_uri": ["https://kongportal.mbankuae-uat.local:8446/default"],
+ "ssl_verify": false,
+ "session_compressor": "zlib",
+ "consumer_claim": ["email"],
+ "redirect_uri": ["https://kongportalapi.mbankuae-uat.local:8447/default/auth"],
+ "session_cookie_domain": ".mbankuae-uat.local",
+ "forbidden_redirect_uri": ["https://kongportal.mbankuae-uat.local:8446/unauthorized"],
+ "client_secret": ["1go8Q~zrOO75LX7W_DGDsxdT7sKz7ZXOzI-8RcUR"],
+ "issuer": "https://login.microsoftonline.com/bf325037-eb21-4a79-8b3f-466dc460bd7c",
+ "logout_methods": ["GET"],
+ "login_redirect_mode": "query"
 }
+

@@ -1,0 +1,51 @@
+image: "mithunmw/logtash"
+imageTag: "tagname"
+imagePullPolicy: "IfNotPresent"
+ 
+logstashConfig:                                                                   
+ logstash.yml: |                                                                 
+   http.host: 0.0.0.0                                                            
+   xpack.monitoring.enabled: false
+   pipeline.ecs_compatibility: disabled
+ 
+logstashPipeline:
+ logstash.conf: |
+   # Input Plugin to take in log via HTTP
+   input {
+     http {
+       id => "kong-http-logs"
+       host => "0.0.0.0"
+       port => 8080
+     }
+   }
+   # Output Plugin
+   output {
+     azure_loganalytics {
+         customer_id => "20a38e7f-d7f6-4f37-a763-993d669ecf56"
+         shared_key => "U4VEE0VA3mXc3y6HwlfBUg23LHRwlN7taxJXJllElGi60OASaXSfaiDEF+ioqEOQHyELtWZNhjKW2OO0W0qWtg=="
+         log_type => "KongLogstashAPILog"
+         key_names  => ["headers","request","response"]
+         key_types => {}
+         max_batch_items => 50
+     }
+     elasticsearch {
+         hosts => ['elasticsearch-master:9200']
+         user => 'elastic'
+         ssl => true
+         ssl_certificate_verification => false
+         password => 'vXVWD81ms2s6B56KVGQO'
+         index => "kong-es-logs"
+     }
+     # for debug
+     stdout { codec => rubydebug }
+   }
+ 
+# Open the port for HTTP Log ingestion from Kong
+service:
+ annotations: {}
+ type: ClusterIP
+ ports:
+   - name: http
+     port: 8080
+     protocol: TCP
+     targetPort: 8080

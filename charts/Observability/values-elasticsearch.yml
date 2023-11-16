@@ -1,0 +1,83 @@
+---
+clusterName: "elasticsearch"
+nodeGroup: "master"
+
+node.roles:
+  master: "true"
+  ingest: "true"
+  data: "true"
+  remote_cluster_client: "true"
+  ml: "true"
+
+replicas: 1
+minimumMasterNodes: 1
+
+protocol: https
+httpPort: 9200
+image: "konguatacr001.azurecr.io/elastic"
+imageTag: "1.0.o"
+imagePullPolicy: "IfNotPresent"
+imagePullSecrets:
+  - name: acr-secret
+
+extraEnvs:
+  - name: "ELASTIC_PASSWORD"
+    valueFrom:
+      secretKeyRef:
+        name: "elastic-credentials"
+        key: "password"
+  - name: "ELASTIC_USERNAME"
+    valueFrom:
+      secretKeyRef:
+        name: "elastic-credentials"
+        key: "username"
+
+esConfig:
+  elasticsearch.yml: |
+    xpack.security.enabled: "false"
+    xpack.security.transport.ssl.enabled: "true"
+    xpack.security.transport.ssl.supported_protocols: "TLSv1.2"
+    xpack.security.transport.ssl.client_authentication: "none"
+    xpack.security.transport.ssl.key: "/usr/share/elasticsearch/config/cert/tls.key"
+    xpack.security.transport.ssl.certificate: "/usr/share/elasticsearch/config/cert/tls.crt"
+    xpack.security.transport.ssl.verification_mode: "certificate"
+    xpack.security.http.ssl.enabled: "true"
+    xpack.security.http.ssl.supported_protocols: "TLSv1.2"
+    xpack.security.http.ssl.client_authentication: "none"
+    xpack.security.http.ssl.key: "/usr/share/elasticsearch/config/cert/tls.key"
+    xpack.security.http.ssl.certificate: "/usr/share/elasticsearch/config/cert/tls.crt"
+
+secretMounts:
+  - name: "elastic-certificates"
+    secretName: "elastic-certificates"
+    path: "/usr/share/elasticsearch/config/cert"
+    defaultMode: "0755"
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "2Gi"
+  limits:
+    cpu: "1000m"
+    memory: "2Gi"
+
+volumeClaimTemplate:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: "managed"
+  resources:
+    requests:
+      storage: 4Gi
+
+service:
+  enabled: true
+  labels: {}
+  labelsHeadless: {}
+  type: LoadBalancer
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  httpPortName: https
+  transportPortName: transport
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+
+clusterHealthCheckParams: "wait_for_status=yellow&timeout=2s"
